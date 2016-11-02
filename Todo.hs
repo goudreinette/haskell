@@ -30,7 +30,7 @@ viewTodo n todo =
 -- add
 add (filename:todo) = do
   todos <- readTodos filename
-  let added = ((intercalate " " todo):todos)
+  let added = ((unwords todo):todos)
   writeTodos filename added
 
 
@@ -38,7 +38,7 @@ add (filename:todo) = do
 -- remove
 remove (filename:todo) = do
   todos <- readTodos filename
-  let filtered = delete (intercalate " " todo) todos
+  let filtered = delete (unwords todo) todos
   writeTodos filename filtered
 
 
