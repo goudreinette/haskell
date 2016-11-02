@@ -36,9 +36,9 @@ add (filename:todo) = do
 
 
 -- remove
-remove [filename, todo] = do
+remove (filename:todo) = do
   todos <- readTodos filename
-  let filtered = delete todo todos
+  let filtered = delete (intercalate " " todo) todos
   writeTodos filename filtered
 
 
