@@ -1,10 +1,15 @@
 module Main where
 
-main :: IO ()
+-- main :: IO ()
+-- main = do
+--     return ()
+--     return "HAHAHA"
+--     line <- getLine
+--     return "BLAH BLAH BLAH"
+--     return 4
+--     putStrLn line
+
 main = do
-    return ()
-    return "HAHAHA"
-    line <- getLine
-    return "BLAH BLAH BLAH"
-    return 4
-    putStrLn line
+  a <- return "hell"
+  b <- return "yeah!"
+  print $ a ++ " " ++ b
