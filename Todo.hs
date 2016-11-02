@@ -7,7 +7,7 @@ import           System.IO
 
 
 dispatch :: [(String, [String] -> IO ())]
-dispatch =  [ ("add", view)
+dispatch =  [ ("add", add)
             , ("view", view)
             , ("remove", remove)
             ]
@@ -28,9 +28,9 @@ viewTodo n todo =
 
 
 -- add
-add [filename, todo] = do
+add (filename:todo) = do
   todos <- readTodos filename
-  let added = (todo:todos)
+  let added = ((intercalate " " todo):todos)
   writeTodos filename added
 
 
@@ -42,7 +42,7 @@ remove [filename, todo] = do
   writeTodos filename filtered
 
 
--- read/write
+-- read/write`
 readTodos filename = do
   contents <- readFile filename
   return (lines contents)
