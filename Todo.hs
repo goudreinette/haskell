@@ -3,7 +3,6 @@ module Main where
 import           Data.List
 import           System.Directory   (removeFile, renameFile)
 import           System.Environment (getArgs)
-import           System.IO
 
 
 dispatch :: [(String, [String] -> IO ())]
