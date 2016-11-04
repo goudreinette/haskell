@@ -7,7 +7,8 @@ main = do
 eachline f =
   unlines . map f . lines
 
-solve = show . head . foldl step [] . words
+solve =
+  show . head . foldl step [] . words
 
 step :: [Float] -> String -> [Float]
 step (x:y:ys) n =
