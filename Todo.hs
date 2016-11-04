@@ -3,6 +3,7 @@ module Main where
 import           Data.List
 import           System.Directory   (removeFile, renameFile)
 import           System.Environment (getArgs)
+import           System.IO.Strict   as S
 
 
 dispatch :: [(String, [String] -> IO ())]
@@ -43,11 +44,8 @@ remove (filename:todo) = do
 
 -- read/write`
 readTodos filename = do
-  contents <- readFile filename
+  contents <- S.readFile filename
   return (lines contents)
 
 writeTodos filename todos = do
-  let tempfile = ('_' : filename)
-  writeFile tempfile  (unlines todos)
-  removeFile filename
-  renameFile tempfile filename
+  writeFile filename  (unlines todos)
