@@ -1,7 +1,7 @@
 module Main where
 
 
-main = do
+main =
   interact (eachline solve)
 
 eachline f =
