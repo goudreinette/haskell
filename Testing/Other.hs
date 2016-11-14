@@ -15,8 +15,12 @@ reverseIdentity :: [Int] -> Bool
 reverseIdentity x =
   (reverse . reverse) x == id x
 
+-- True
 application :: (Int -> Int) -> Int -> Bool
 application f a =
   (f $ a) == f a
+
+
+
 
 main = verboseCheck (application succ)
