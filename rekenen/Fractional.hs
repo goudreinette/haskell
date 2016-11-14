@@ -1,22 +1,23 @@
+{-# LANGUAGE FlexibleInstances #-}
 module Fractional where
 
-type Numerator = Int
-type Denominator = Int
-
+type Numerator = Integer
+type Denominator = Integer
 type Fraction = (Numerator, Denominator)
 
-add (num, denom) (num', denom') =
-  let
-    numerator = num * denom' + num' * denom
+instance Num Fraction where
+  negate (num, denom) = (-num, denom)
+  (+)                 = manipulate (+)
+  (*)                 = manipulate (*)
+  fromInteger num     = (num, 1)
+  abs (num, denom)    = (abs num, denom)
+
+manipulate f (num, denom) (num', denom') =
+  simplify (numerator, denominator) where
+    numerator = (num * denom') `f` (num' * denom)
     denominator = denom * denom'
-  in
-    simplify (numerator, denominator)
 
 simplify :: Fraction -> Fraction
 simplify (numerator, denominator) =
-  let
-    gcd = gcd' numerator denominator
-    in (numerator `quot` gcd, denominator `quot` gcd)
-
-gcd' a 0 = a
-gcd' a b = gcd' b (a `mod` b)
+  (numerator `quot` gcd', denominator `quot` gcd') where
+    gcd' = gcd numerator denominator
