@@ -24,7 +24,7 @@ shortyGen = replicateM 7 (randomElement alphaNum)
 
 
 main = do
-  shortys <- atomically $ newTVar []
+  -- shortys <- liftIO <| newTVarIO []
 
   get "/:uri" $ do
     html "Hello"
