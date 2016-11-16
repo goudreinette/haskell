@@ -16,5 +16,5 @@ main = do
 
 transaction :: TVar Integer -> STM ()
 transaction tvar = do
-  modifyTVar' tvar (+2)
-  modifyTVar' tvar (*3)
+  modifyTVar tvar (+2)
+  modifyTVar tvar (*3)
