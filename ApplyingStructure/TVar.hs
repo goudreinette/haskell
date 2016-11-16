@@ -8,12 +8,12 @@ import           Flow
 main = do
   tvar <- newTVarIO 0
   before <- readTVarIO tvar
-  print $ "before " ++ show before
+  print <| "before " ++ show before
 
   atomically <| transaction tvar
 
   after <- readTVarIO tvar
-  print $ "after " ++ show after
+  print <| "after " ++ show after
 
 transaction :: TVar Integer -> STM ()
 transaction tvar = do
