@@ -1,12 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Shortener where
 
+import           Control.Concurrent.STM
 import           Control.Monad
 import           Control.Monad.IO.Class
+import           Data.Map
 import           Data.Monoid
-import           Data.Text.Internal.Lazy
 import           Flow
-import qualified System.Random           as Random
+import qualified System.Random          as Random
 import           Web.Scotty
 
 alphaNum :: String
@@ -23,7 +24,7 @@ shortyGen = replicateM 7 (randomElement alphaNum)
 
 
 main = do
+  shortys <- atomically $ newTVar []
+
   get "/:uri" $ do
-    uri <- param "uri"
-    shorty <- liftIO $ pack . shortyGen
-    html $ "<h1>" <>  uri <> "</h1>"
+    html "Hello"
