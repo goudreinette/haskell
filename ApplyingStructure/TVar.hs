@@ -3,13 +3,14 @@ module TVar where
 import           Control.Concurrent.STM.TVar
 import           Control.Monad
 import           Control.Monad.STM
+import           Flow
 
 main = do
   tvar <- newTVarIO 0
   before <- readTVarIO tvar
   print $ "before " ++ show before
 
-  atomically $ transaction tvar
+  atomically <| transaction tvar
 
   after <- readTVarIO tvar
   print $ "after " ++ show after
