@@ -3,6 +3,7 @@ module Json where
 import           Data.List.Split
 import           Flow
 
+
 data Expression
   = Expression String Value
   deriving (Eq, Show)
@@ -34,8 +35,7 @@ tokenize string =
   where
     tokens = split' string |> filter (/= "") |> map match
 
-split' string = do
-  lines string
+split' string = lines string
   >>= words
   >>= split (dropInnerBlanks (oneOf "\",{}:[]"))
   >>= splitOn "null"
