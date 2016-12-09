@@ -8,8 +8,10 @@ main = traverse print ['a'..'z']
 
 --     fmap . fmap
 --     maps the function over two levels of structure
-newtype UserName = UserName String deriving (Eq, Show)
-newtype Dollars = Dollars Int deriving (Eq, Show)
 
-addDollars (Dollars account) (Dollars amount) =
-  Dollars (account + amount)
+data Query   = Query
+data SomeObj = SomeObj
+data Err     = Err
+
+decodeFn :: String -> Either Err SomeObj
+decodeFn = undefined
