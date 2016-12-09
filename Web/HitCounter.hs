@@ -13,8 +13,8 @@ import Web.Scotty
 
 main = do
   hits <- newTVarIO 0
-  scotty 3000 $ do
+  scotty 3000 $
     get "/" $ do
       liftIO $ atomically $ modifyTVar' hits succ
       hits <- liftIO $ readTVarIO hits
-      "<h1>Hits: " ++  show hits ++ " me up!</h1>" |> convertText  |> html
+      "<h1>Hits: " ++  show hits ++ "!</h1>" |> convertText  |> html
