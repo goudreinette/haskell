@@ -19,7 +19,10 @@ instance Traversable Identity where
 
 -- Constant
 newtype Constant a b =
-  Constant { getConstant :: a }
+  Constant { getConstant :: a } deriving (Eq, Ord, Show)
 
 instance Functor (Constant a) where
-  fmap f x = x
+  fmap _ (Constant x) = Constant x
+
+-- instance Foldable (Constant a) where
+--   foldr _ (Constant x) = x
