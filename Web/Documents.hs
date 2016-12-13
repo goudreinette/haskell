@@ -22,24 +22,24 @@ data Person = Person
 main = do
   store <- newIORef (empty :: Map Int Person)
   scotty 3000 $ do
-    get "/people" $ do
-      people <- getPeople store
-      json people
-    post "/person/" $ do
-      body <- body
-      people <- getPeople store
-      let id'     = size people
-          result = eitherDecode body :: Either String Person
-
-      case result of
-        Left error   -> do
-          text $ convertText error
-        Right person -> do
-          liftIO $ modifyIORef' store (insert id' person)
-          json person
+    resource "people" Person store
 
 
 
+resource name schema store = do
+  get name $ do
+    items <- liftIO $ readIORef store
+    json items
 
-getPeople store =
-  liftIO $ readIORef store
+  post name $ do
+    body <- body
+    items <- liftIO $ readIORef store
+    let id'     = size items
+        result = eitherDecode body :: Either String schema
+
+    case result of
+      Left error   -> do
+        text $ convertText error
+      Right item -> do
+        liftIO $ modifyIORef' store (insert id' item)
+        json item
