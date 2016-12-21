@@ -8,8 +8,10 @@ import Data.String.Conversions
 import Network.HTTP.Types      (status201)
 import Web.Scotty
 
+
+
 main = do
-  store <- newTVarIO (empty :: Map String String)
+  store <- newTVarIO (empty :: Map Strig String)
   scotty 3000 $ do
     get "/" $ do
       current <- liftIO $ readTVarIO store
