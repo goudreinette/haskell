@@ -1,10 +1,10 @@
 module Pause where
 
-data Pause
-    = Run (IO Pause)
+data PausableIO
+    = Run (IO PausableIO)
     | Done
 
-example :: Pause
+example :: PausableIO
 example = Run $ do
   putStrLn "Let's begin"
   putStrLn "Step 1"
@@ -15,7 +15,11 @@ example = Run $ do
       putStrLn "Yay, we're done!"
       return Done
 
-runN :: Int -> Pause -> IO Pause
-runN 0 pause    = return Done
-runN n Done     = return Done
+runN :: Int -> PausableIO -> IO PausableIO
+runN 0 _        = return Done
+runN _ Done     = return Done
 runN n (Run io) = io >>= runN (n - 1)
+
+fullRun :: PausableIO -> IO ()
+fullRun Done     = return ()
+fullRun (Run io) = io >>= fullRun
