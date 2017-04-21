@@ -1,25 +1,31 @@
 module Pause where
 
-data PausableIO
-    = Run (IO PausableIO)
+data Pause
+    = Run (IO Pause)
     | Done
 
-example :: PausableIO
+example :: Pause
 example = Run $ do
   putStrLn "Let's begin"
   putStrLn "Step 1"
-  return $ Run $ do
+  pause $ do
     putStrLn "Step 2"
-    return $ Run $ do
+    pause $ do
       putStrLn "Step 3"
       putStrLn "Yay, we're done!"
-      return Done
+      done
 
-runN :: Int -> PausableIO -> IO PausableIO
+runN :: Int -> Pause -> IO Pause
 runN 0 _        = return Done
 runN _ Done     = return Done
 runN n (Run io) = io >>= runN (n - 1)
 
-fullRun :: PausableIO -> IO ()
+fullRun :: Pause -> IO ()
 fullRun Done     = return ()
 fullRun (Run io) = io >>= fullRun
+
+pause :: IO Pause -> IO Pause
+pause = return . Run
+
+done :: IO Pause
+done = return Done
