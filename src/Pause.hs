@@ -1,44 +1,30 @@
 module Pause where
 
-import Control.Monad
+import Control.Monad.Free
 
--- So, minimal is (Run (IO (Done a))
-data PauseIO a
-  = Run (IO (PauseIO a))
-  | Done a
+type Pause = Free IO
 
-lift :: IO a -> PauseIO a
-lift io = Run $ fmap Done io
-
-pause = Done ()
-
-instance Monad PauseIO where
-    return = Done
-    (Run m) >>= f = Run $ fmap (>>= f) m
-    (Done m) >>= f = f m
-
-instance Functor PauseIO where
-  fmap = liftM
-
-instance Applicative PauseIO where
-  pure  = return
-  (<*>) = ap
-
-
+main :: Pause String
 main = do
-  lift $ putStrLn "Step 1"
+  liftF $ putStrLn "Step 1"  -- Free (IO ())
+  pause -- Pure ()
+  liftF $ putStrLn "Step 2"
   pause
-  lift $ putStrLn "Step 2"
-  pause
-  lift $ do
-    putStrLn "Step 3"
+  liftF $ do -- Free (IO String)
+    name <- getLine
+    putStrLn $ "Step 3: hello, " ++ name
     putStrLn "Done!"
+    return name -- Pure String
 
-runN :: Int -> PauseIO a -> IO (PauseIO a)
+
+pause :: Pause ()
+pause = Pure ()
+
+runN :: Int -> Pause a -> IO (Pause a)
 runN 0 p        = return p
-runN _ (Done r) = return $ Done r
-runN n (Run m)  = m >>= runN (n - 1)
+runN _ (Pure r) = return $ Pure r
+runN n (Free m) = m >>= runN (n - 1)
 
-fullRun :: PauseIO a -> IO a
-fullRun (Done r) = return r
-fullRun (Run m)  = m >>= fullRun
+fullRun :: Pause a -> IO a
+fullRun (Pure r) = return r
+fullRun (Free m) = m >>= fullRun
