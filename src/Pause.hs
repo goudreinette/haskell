@@ -2,29 +2,32 @@ module Pause where
 
 import Control.Monad.Free
 
-type Pause = Free
+type Pause = Free IO
 
-main :: Pause IO String
+main :: Pause String
 main = do
-  liftF $ putStrLn "Step 1"  -- Free (IO ())
-  pause -- Pure ()
-  liftF $ putStrLn "Step 2"
+  putF "Step 1"        -- Free (IO ())
+  pause                -- Pure ()
+  putF "Step 2"
   pause
-  liftF $ do -- Free (IO String)
-    name <- getLine
-    putStrLn $ "Step 3: hello, " ++ name
+  liftF $ do           -- Free (IO String)
+    putStrLn "Step 3"  -- IO ()
     putStrLn "Done!"
-    return name -- Pure String
+    return "All done." -- IO String
 
 
-pause :: Pause m ()
+
+pause :: Pause ()
 pause = Pure ()
 
-runN :: Monad m => Int -> Pause m a -> m (Pause m a)
+putF :: String -> Pause ()
+putF = Free . fmap Pure . putStrLn
+
+runN :: Int -> Pause a -> IO (Pause a)
 runN 0 p        = return p
 runN _ (Pure r) = return $ Pure r
 runN n (Free m) = m >>= runN (n - 1)
 
-fullRun :: Monad m => Pause m a -> m a
+fullRun :: Pause a -> IO a
 fullRun (Pure r) = return r
 fullRun (Free m) = m >>= fullRun
